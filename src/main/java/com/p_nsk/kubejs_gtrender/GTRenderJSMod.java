@@ -1,4 +1,4 @@
-package com.p_nsk.kubejs_gtrenderer;
+package com.p_nsk.kubejs_gtrender;
 
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.client.renderer.machine.DynamicRenderManager;
@@ -14,14 +14,14 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(GTRJSMod.MOD_ID)
+@Mod(GTRenderJSMod.MOD_ID)
 @SuppressWarnings("removal")
-public class GTRJSMod {
+public class GTRenderJSMod {
 
-    public static final String MOD_ID = "kubejs_gtrenderer";
+    public static final String MOD_ID = "kubejs_gtrender";
     public static final Logger LOGGER = LogManager.getLogger();
 
-    public GTRJSMod() {
+    public GTRenderJSMod() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         modEventBus.addListener(this::commonSetup);
@@ -39,7 +39,7 @@ public class GTRJSMod {
 
     private void initializeDynamicRenders() {
         DynamicRenderManager.register(
-                GTRJSMod.id("kubejs_dynamic"),
+                GTRenderJSMod.id("kubejs_dynamic"),
                 KubeJSDynamicRender.TYPE);
     }
 

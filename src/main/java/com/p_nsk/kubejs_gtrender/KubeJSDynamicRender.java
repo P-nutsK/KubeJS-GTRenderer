@@ -1,4 +1,4 @@
-package com.p_nsk.kubejs_gtrenderer;
+package com.p_nsk.kubejs_gtrender;
 
 import com.gregtechceu.gtceu.api.machine.feature.IMachineFeature;
 import com.gregtechceu.gtceu.client.renderer.machine.DynamicRender;
@@ -18,7 +18,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.p_nsk.kubejs_gtrenderer.builder.RenderHooks;
+import com.p_nsk.kubejs_gtrender.builder.RenderHooks;
 import dev.latvian.mods.kubejs.util.JsonIO;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -87,7 +87,7 @@ public final class KubeJSDynamicRender extends DynamicRender<IMachineFeature, Ku
     }
 
     private RenderHooks<IMachineFeature> hooks() {
-        RenderHooks<IMachineFeature> h = KubeJSDynamicRenderRegistry.getHooks(renderId);
+        RenderHooks<IMachineFeature> h = GTRenderJSRegistry.getHooks(renderId);
         return (h != null) ? h : RenderHooks.noop();
     }
 

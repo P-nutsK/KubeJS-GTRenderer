@@ -19,8 +19,7 @@ license = "${mod_license}"
     # Some more fluff displayed in the Mods panel. Plug your stuff here!
     authors="${mod_author}"
     description = '''
-Example Description
-...ain is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain,... (Lorem Ipsum translated to english.)
+A helper to enable the creation of custom renderers for GregTech machines in KubeJS.
 '''
 
     [[dependencies.${mod_id}]]
@@ -42,8 +41,8 @@ Example Description
         ordering = "AFTER"
         side = "BOTH"
     [[dependencies.${mod_id}]]
-    modId = "kubejs"
-    mandatory = true
-    versionRange = "[${kubejs_version},)"
-    ordering = "AFTER"
-    side = "BOTH"
+        modId = "kubejs"
+        mandatory = true
+        versionRange = "[${kubejs_version},)"
+        ordering = "AFTER"
+        side = "BOTH"

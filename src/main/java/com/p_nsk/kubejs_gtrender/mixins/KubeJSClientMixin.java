@@ -1,8 +1,8 @@
-package com.p_nsk.kubejs_gtrenderer.mixins;
+package com.p_nsk.kubejs_gtrender.mixins;
 
-import com.p_nsk.kubejs_gtrenderer.GTClientRenderEvents;
-import com.p_nsk.kubejs_gtrenderer.KubeJSDynamicRenderRegistry;
-import com.p_nsk.kubejs_gtrenderer.RegisterDynamicRenderEventJS;
+import com.p_nsk.kubejs_gtrender.GTRenderJSEvents;
+import com.p_nsk.kubejs_gtrender.GTRenderJSRegistry;
+import com.p_nsk.kubejs_gtrender.RegisterDynamicRenderEventJS;
 import dev.latvian.mods.kubejs.client.KubeJSClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -13,10 +13,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class KubeJSClientMixin {
 
     @Inject(method = "reloadClientScripts", at = @At("RETURN"))
-    private static void kubejs_gtrenderer$onClientScriptsReloaded(CallbackInfo ci) {
+    private static void kubejs_gtrender$onClientScriptsReloaded(CallbackInfo ci) {
         // スクリプトリロード時に古い登録をクリア
-        KubeJSDynamicRenderRegistry.clear();
-        GTClientRenderEvents.REGISTER_RENDERING.post(dev.latvian.mods.kubejs.script.ScriptType.CLIENT,
+        GTRenderJSRegistry.clear();
+        GTRenderJSEvents.REGISTER_RENDERING.post(dev.latvian.mods.kubejs.script.ScriptType.CLIENT,
                 new RegisterDynamicRenderEventJS());
     }
 }

@@ -1,9 +1,9 @@
 {
   "required": true,
-  "package": "com.p_nsk.kubejs_gtrenderer.mixins",
+  "package": "com.p_nsk.kubejs_gtrender.mixins",
   "compatibilityLevel": "JAVA_17",
   "minVersion": "0.8",
-  "refmap": "mixins.kubejs_gtrenderer.refmap.json",
+  "refmap": "mixins.kubejs_gtrender.refmap.json",
   "mixins": [
 
   ],

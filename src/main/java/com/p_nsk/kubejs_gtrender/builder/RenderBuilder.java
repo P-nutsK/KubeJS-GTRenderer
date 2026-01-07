@@ -1,4 +1,4 @@
-package com.p_nsk.kubejs_gtrenderer.builder;
+package com.p_nsk.kubejs_gtrender.builder;
 
 import com.gregtechceu.gtceu.api.machine.feature.IMachineFeature;
 

@@ -1,4 +1,4 @@
-package com.p_nsk.kubejs_gtrenderer.builder;
+package com.p_nsk.kubejs_gtrender.builder;
 
 import com.gregtechceu.gtceu.api.machine.feature.IMachineFeature;
 
@@ -10,7 +10,7 @@ import net.minecraft.world.phys.Vec3;
 
 import com.google.gson.JsonElement;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.p_nsk.kubejs_gtrenderer.KubeJSDynamicRender.Defaults;
+import com.p_nsk.kubejs_gtrender.KubeJSDynamicRender.Defaults;
 import org.jetbrains.annotations.Nullable;
 
 public interface RenderHooks<T extends IMachineFeature> {

@@ -1,1 +1,1 @@
-com.p_nsk.kubejs_gtrenderer.GTRendererJSPlugin
+com.p_nsk.kubejs_gtrender.GTRenderJSPlugin

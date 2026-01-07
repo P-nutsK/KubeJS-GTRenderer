@@ -147,7 +147,7 @@ legacyForge {
 }
 jar {
     manifest.attributes([
-            "MixinConfigs": "kubejs_gtrenderer.mixins.json"
+            "MixinConfigs": "kubejs_gtrender.mixins.json"
     ])
 }
 
@@ -185,8 +185,8 @@ dependencies {
 
 // See com.example.examplemod.mixin.DummyMixin for information about mixins
 mixin {
-    add sourceSets.main, "mixins.kubejs_gtrenderer.refmap.json"
-    config "kubejs_gtrenderer.mixins.json"
+    add sourceSets.main, "mixins.kubejs_gtrender.refmap.json"
+    config "kubejs_gtrender.mixins.json"
 }
 
 tasks.named('processResources', ProcessResources).configure {

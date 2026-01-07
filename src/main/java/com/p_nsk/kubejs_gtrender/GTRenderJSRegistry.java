@@ -1,18 +1,18 @@
-package com.p_nsk.kubejs_gtrenderer;
+package com.p_nsk.kubejs_gtrender;
 
 import com.gregtechceu.gtceu.api.machine.feature.IMachineFeature;
 
 import net.minecraft.resources.ResourceLocation;
 
-import com.p_nsk.kubejs_gtrenderer.builder.RenderHooks;
+import com.p_nsk.kubejs_gtrender.builder.RenderHooks;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public final class KubeJSDynamicRenderRegistry {
+public final class GTRenderJSRegistry {
 
-    private KubeJSDynamicRenderRegistry() {}
+    private GTRenderJSRegistry() {}
 
     // ID -> Hooks
     private static final ConcurrentHashMap<ResourceLocation, RenderHooks<?>> HOOKS = new ConcurrentHashMap<>();
@@ -31,7 +31,7 @@ public final class KubeJSDynamicRenderRegistry {
 
     /** 全消し（/reload時に呼ぶ想定） */
     public static void clear() {
-        GTRJSMod.LOGGER.info("Clearing KubeJSDynamicRenderRegistry...");
+        GTRenderJSMod.LOGGER.info("Clearing GTRenderJSRegistry...");
         HOOKS.clear();
         WARNED_MISSING.clear();
     }
