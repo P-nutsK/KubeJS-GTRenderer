@@ -1,12 +1,14 @@
 {
   "required": true,
-  "package": "com.example.examplemod.mixin",
+  "package": "com.p_nsk.kubejs_gtrenderer.mixins",
   "compatibilityLevel": "JAVA_17",
   "minVersion": "0.8",
+  "refmap": "mixins.kubejs_gtrenderer.refmap.json",
   "mixins": [
-    "DummyMixin"
+
   ],
   "client": [
+    "KubeJSClientMixin"
   ],
   "injectors": {
     "defaultRequire": 1
