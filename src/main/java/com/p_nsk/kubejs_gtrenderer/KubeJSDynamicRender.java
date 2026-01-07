@@ -66,6 +66,10 @@ public final class KubeJSDynamicRender extends DynamicRender<IMachineFeature, Ku
         this.data = data;
     }
 
+    public static KubeJSDynamicRender of(ResourceLocation renderId) {
+        return new KubeJSDynamicRender(renderId);
+    }
+
     public static KubeJSDynamicRender of(ResourceLocation renderId, @Nullable JsonElement data) {
         return new KubeJSDynamicRender(renderId, data);
     }
