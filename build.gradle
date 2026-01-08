@@ -220,3 +220,7 @@ tasks.withType(JavaCompile).configureEach {
     options.release.set(17)
     options.compilerArgs << "-Aquiet=true" // Suppress mixin notes
 }
+
+tasks.named("spotlessCheck") {
+    dependsOn(tasks.named("spotlessApply"))
+}
