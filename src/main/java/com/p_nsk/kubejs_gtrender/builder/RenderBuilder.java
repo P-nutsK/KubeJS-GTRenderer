@@ -53,7 +53,7 @@ public class RenderBuilder<T extends IMachineFeature, Binding> {
         return this;
     }
 
-    @Info("Default: 64")
+    @Info("@default 64")
     public RenderBuilder<T, Binding> viewDistance(int distance) {
         this.viewDistance = distance;
         return this;
@@ -64,20 +64,32 @@ public class RenderBuilder<T extends IMachineFeature, Binding> {
         return this;
     }
 
-    @Info("Default: true")
-    RenderBuilder<T, Binding> isBlockEntityRenderer(boolean isBlockEntityRenderer) {
+    @Info("@default true")
+    public RenderBuilder<T, Binding> isBlockEntityRenderer(boolean isBlockEntityRenderer) {
         this.isBlockEntityRenderer = isBlockEntityRenderer;
         return this;
     }
 
+    @SuppressWarnings("TrailingWhitespacesInTextBlock")
     @Info("""
-            With KubeJSDynamicRender.of("ns:id", here), you can pass arguments!
-            It accepts anything that is JSON Serializable.
-            The value passed as the second argument to KubeJSDynamicRender.of will be JSON serialized and then deserialized, and passed as is. Therefore, the input value must be JSON Serializable.
-            The output accepts all values representable by JavaScript.
-            This result is cached on each client reload, so it must be pure. If you want to use non-deterministic elements, you can return functions or objects containing functions.
+            With `KubeJSDynamicRender.of("ns:id", here)`, you can pass arguments!  
+            It accepts anything that is JSON Serializable.  
+            The value passed as the second argument to {@link KubeJSDynamicRender.of|`KubeJSDynamicRender.of`} will be JSON serialized and then deserialized, and passed as is. Therefore, the input value must be JSON Serializable.  
+            The output accepts all values representable by JavaScript.  
+            This result is cached on each client reload, so it must be pure. If you want to use non-deterministic elements, you can return functions or objects containing functions.  
+            @example
+            ```js
+            builder.prepareBindings(raw => {
+                const hex = parseInt(raw.color.slice(1),16);
+                return {
+                    red: (hex >> 16) & 0xFF,
+                    green: (hex >> 8) & 0xFF,
+                    blue: hex & 0xFF
+                }
+            });
+            ```
             """)
-    RenderBuilder<T, Binding> prepareBindings(Function<Object, Binding> b) {
+    public RenderBuilder<T, Binding> prepareBindings(Function<Object, Binding> b) {
         this.prepareBindings = b;
         return this;
     }
