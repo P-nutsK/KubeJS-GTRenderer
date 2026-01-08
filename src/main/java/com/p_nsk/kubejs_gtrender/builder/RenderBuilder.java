@@ -14,12 +14,12 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 @SuppressWarnings("unused")
-public class RenderBuilder<T extends IMachineFeature> {
+public class RenderBuilder<T extends IMachineFeature, Binding> {
 
     @Nullable
-    Consumer<RenderContext<T>> renderHook;
+    Consumer<RenderContext<T, Binding>> renderHook;
     @Nullable
-    Consumer<ItemRenderContext<T>> renderByItemHook;
+    Consumer<ItemRenderContext<T, Binding>> renderByItemHook;
     @Nullable
     BiPredicate<T, Vec3> shouldRenderHook;
     @Nullable
@@ -30,45 +30,59 @@ public class RenderBuilder<T extends IMachineFeature> {
     Function<T, AABB> getRenderBoundingBoxHook;
     @Nullable
     Boolean isBlockEntityRenderer;
+    @Nullable
+    Function<Object, Binding> prepareBindings;
 
-    public RenderBuilder<T> render(Consumer<RenderContext<T>> b) {
-        this.renderHook = b;
+    public RenderBuilder<T, Binding> render(Consumer<RenderContext<T, Binding>> render) {
+        this.renderHook = render;
         return this;
     }
 
-    public RenderBuilder<T> renderByItem(Consumer<ItemRenderContext<T>> b) {
-        this.renderByItemHook = b;
+    public RenderBuilder<T, Binding> renderByItem(Consumer<ItemRenderContext<T, Binding>> renderByItem) {
+        this.renderByItemHook = renderByItem;
         return this;
     }
 
-    public RenderBuilder<T> shouldRender(BiPredicate<T, Vec3> b) {
-        this.shouldRenderHook = b;
+    public RenderBuilder<T, Binding> shouldRender(BiPredicate<T, Vec3> shouldRender) {
+        this.shouldRenderHook = shouldRender;
         return this;
     }
 
-    public RenderBuilder<T> shouldRenderOffScreen(Predicate<T> b) {
-        this.shouldRenderOffScreenHook = b;
+    public RenderBuilder<T, Binding> shouldRenderOffScreen(Predicate<T> shouldRenderOffScreen) {
+        this.shouldRenderOffScreenHook = shouldRenderOffScreen;
         return this;
     }
 
     @Info("Default: 64")
-    public RenderBuilder<T> viewDistance(int distance) {
+    public RenderBuilder<T, Binding> viewDistance(int distance) {
         this.viewDistance = distance;
         return this;
     }
 
-    public RenderBuilder<T> renderBoundingBox(Function<T, AABB> b) {
-        this.getRenderBoundingBoxHook = b;
+    public RenderBuilder<T, Binding> renderBoundingBox(Function<T, AABB> getRenderBoundingBox) {
+        this.getRenderBoundingBoxHook = getRenderBoundingBox;
         return this;
     }
 
     @Info("Default: true")
-    RenderBuilder<T> isBlockEntityRenderer(boolean b) {
-        this.isBlockEntityRenderer = b;
+    RenderBuilder<T, Binding> isBlockEntityRenderer(boolean isBlockEntityRenderer) {
+        this.isBlockEntityRenderer = isBlockEntityRenderer;
         return this;
     }
 
-    public RenderHooks<T> build() {
+    @Info("""
+            With KubeJSDynamicRender.of("ns:id", here), you can pass arguments!
+            It accepts anything that is JSON Serializable.
+            The value passed as the second argument to KubeJSDynamicRender.of will be JSON serialized and then deserialized, and passed as is. Therefore, the input value must be JSON Serializable.
+            The output accepts all values representable by JavaScript.
+            This result is cached on each client reload, so it must be pure. If you want to use non-deterministic elements, you can return functions or objects containing functions.
+            """)
+    RenderBuilder<T, Binding> prepareBindings(Function<Object, Binding> b) {
+        this.prepareBindings = b;
+        return this;
+    }
+
+    public RenderHooks<T, Binding> build() {
         if (renderHook == null) {
             throw new IllegalStateException("render method is not set");
         }
@@ -79,6 +93,6 @@ public class RenderBuilder<T extends IMachineFeature> {
                 viewDistance,
                 getRenderBoundingBoxHook,
                 renderByItemHook,
-                isBlockEntityRenderer);
+                isBlockEntityRenderer, prepareBindings);
     }
 }

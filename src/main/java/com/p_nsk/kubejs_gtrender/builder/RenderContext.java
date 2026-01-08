@@ -4,10 +4,9 @@ import com.gregtechceu.gtceu.api.machine.feature.IMachineFeature;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 
-import com.google.gson.JsonElement;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-public class RenderContext<T extends IMachineFeature> extends Context<T> {
+public class RenderContext<T extends IMachineFeature, Binding> extends Context<T, Binding> {
 
     public final T machine;
     public final float partialTick;
@@ -16,9 +15,9 @@ public class RenderContext<T extends IMachineFeature> extends Context<T> {
     public final int packedLight;
     public final int packedOverlay;
 
-    public RenderContext(JsonElement data, Object dataView, T machine, float partialTick, PoseStack poseStack,
+    public RenderContext(Binding bindings, T machine, float partialTick, PoseStack poseStack,
                          MultiBufferSource buffer, int packedLight, int packedOverlay) {
-        super(data, dataView);
+        super(bindings);
         this.machine = machine;
         this.partialTick = partialTick;
         this.poseStack = poseStack;

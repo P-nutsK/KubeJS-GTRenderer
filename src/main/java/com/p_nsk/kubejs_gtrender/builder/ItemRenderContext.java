@@ -6,10 +6,9 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
-import com.google.gson.JsonElement;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-public class ItemRenderContext<T extends IMachineFeature> extends Context<T> {
+public class ItemRenderContext<T extends IMachineFeature, Binding> extends Context<T, Binding> {
 
     public final ItemStack stack;
     public final ItemDisplayContext displayContext;
@@ -18,9 +17,9 @@ public class ItemRenderContext<T extends IMachineFeature> extends Context<T> {
     public final int packedLight;
     public final int packedOverlay;
 
-    public ItemRenderContext(JsonElement data, Object dataView, ItemStack stack, ItemDisplayContext displayContext,
+    public ItemRenderContext(Binding binding, ItemStack stack, ItemDisplayContext displayContext,
                              PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
-        super(data, dataView);
+        super(binding);
         this.stack = stack;
         this.displayContext = displayContext;
         this.poseStack = poseStack;

@@ -13,21 +13,19 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.p_nsk.kubejs_gtrender.KubeJSDynamicRender.Defaults;
 import org.jetbrains.annotations.Nullable;
 
-public interface RenderHooks<T extends IMachineFeature> {
+public interface RenderHooks<T extends IMachineFeature, Bindings> {
 
     void render(T machine, float partialTick,
                 PoseStack poseStack, MultiBufferSource buffer,
                 int packedLight, int packedOverlay,
                 Defaults<T> defaults,
-                @Nullable JsonElement data,
-                Object dataView);
+                @Nullable JsonElement rawBinding);
 
     void renderByItem(ItemStack stack, ItemDisplayContext displayContext,
                       PoseStack poseStack, MultiBufferSource buffer,
                       int packedLight, int packedOverlay,
                       Defaults<T> defaults,
-                      @Nullable JsonElement data,
-                      Object dataView);
+                      @Nullable JsonElement rawBinding);
 
     boolean shouldRender(T machine, Vec3 cameraPos, Defaults<T> defaults);
 
@@ -39,25 +37,24 @@ public interface RenderHooks<T extends IMachineFeature> {
 
     boolean isBlockEntityRenderer(Defaults<T> defaults);
 
-    static <T extends IMachineFeature> RenderHooks<T> noop() {
-        @SuppressWarnings("unchecked")
-        RenderHooks<T> cast = (RenderHooks<T>) NoopHooks.INSTANCE;
-        return cast;
+    static <T extends IMachineFeature> RenderHooks<T, Object> noop() {
+        // noinspection unchecked
+        return (RenderHooks<T, Object>) NoopHooks.INSTANCE;
     }
 
-    enum NoopHooks implements RenderHooks<IMachineFeature> {
+    enum NoopHooks implements RenderHooks<IMachineFeature, Object> {
 
         INSTANCE;
 
         @Override
         public void render(IMachineFeature machine, float partialTick, PoseStack poseStack, MultiBufferSource buffer,
                            int packedLight, int packedOverlay, Defaults<IMachineFeature> defaults,
-                           @Nullable JsonElement data, Object dataView) {}
+                           @Nullable JsonElement rawBinding) {}
 
         @Override
         public void renderByItem(ItemStack stack, ItemDisplayContext displayContext, PoseStack poseStack,
                                  MultiBufferSource buffer, int packedLight, int packedOverlay,
-                                 Defaults<IMachineFeature> defaults, @Nullable JsonElement data, Object dataView) {}
+                                 Defaults<IMachineFeature> defaults, @Nullable JsonElement rawBinding) {}
 
         @Override
         public boolean shouldRender(IMachineFeature machine, Vec3 cameraPos, Defaults<IMachineFeature> defaults) {

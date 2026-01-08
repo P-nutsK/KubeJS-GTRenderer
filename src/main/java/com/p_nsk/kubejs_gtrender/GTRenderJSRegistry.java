@@ -15,13 +15,13 @@ public final class GTRenderJSRegistry {
     private GTRenderJSRegistry() {}
 
     // ID -> Hooks
-    private static final ConcurrentHashMap<ResourceLocation, RenderHooks<?>> HOOKS = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<ResourceLocation, RenderHooks<?, ?>> HOOKS = new ConcurrentHashMap<>();
 
     // 「未登録」警告を1回だけ出すための集合（任意）
     private static final Set<ResourceLocation> WARNED_MISSING = ConcurrentHashMap.newKeySet();
 
     /** 登録（同じIDは上書き） */
-    public static void register(ResourceLocation id, RenderHooks<?> hooks) {
+    public static void register(ResourceLocation id, RenderHooks<?, ?> hooks) {
         if (id == null) throw new IllegalArgumentException("id is null");
         if (hooks == null) throw new IllegalArgumentException("hooks is null");
 
@@ -38,8 +38,8 @@ public final class GTRenderJSRegistry {
 
     /** 取得（なければnull） */
     @SuppressWarnings("unchecked")
-    public static @Nullable RenderHooks<IMachineFeature> getHooks(ResourceLocation id) {
-        return (RenderHooks<IMachineFeature>) HOOKS.get(id);
+    public static @Nullable RenderHooks<IMachineFeature, Object> getHooks(ResourceLocation id) {
+        return (RenderHooks<IMachineFeature, Object>) HOOKS.get(id);
     }
 
     /** 未登録のときに「一回だけ」警告したい場合に使う（任意） */

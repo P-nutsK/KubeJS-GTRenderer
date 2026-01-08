@@ -12,9 +12,10 @@ import java.util.function.Consumer;
 @SuppressWarnings("unused")
 public class RegisterDynamicRenderEventJS extends EventJS {
 
-    public <T extends IMachineFeature> void create(ResourceLocation id, Consumer<RenderBuilder<T>> consumer) {
+    public <T extends IMachineFeature, Bindings> void create(ResourceLocation id,
+                                                             Consumer<RenderBuilder<T, Bindings>> consumer) {
         GTRenderJSMod.LOGGER.info("Creating renderer: {}", id);
-        RenderBuilder<T> builder = new RenderBuilder<>();
+        RenderBuilder<T, Bindings> builder = new RenderBuilder<>();
         consumer.accept(builder);
         GTRenderJSRegistry.register(id, builder.build());
         GTRenderJSMod.LOGGER.info("Registered renderer: {}", id);

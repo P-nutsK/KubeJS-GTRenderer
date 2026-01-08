@@ -19,25 +19,18 @@ import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.p_nsk.kubejs_gtrender.builder.RenderHooks;
-import dev.latvian.mods.kubejs.util.JsonIO;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-/**
- * KubeJSが定義するDynamicRenderの「共通器」。
- * - 種類(TYPE)はこれ1つだけ
- * - 個別レンダラは renderId で区別
- * - 任意設定は data(PASSTHROUGH) に積む
- */
 @SuppressWarnings({ "NullableProblems", "unused" })
 public final class KubeJSDynamicRender extends DynamicRender<IMachineFeature, KubeJSDynamicRender> {
 
     @Getter
     private final ResourceLocation renderId;
-    private final @Nullable JsonElement data;
+    private final @Nullable JsonElement rawBinding;
 
     private static final Codec<JsonElement> JSON_CODEC = Codec.PASSTHROUGH.xmap(
             dyn -> dyn.convert(JsonOps.INSTANCE).getValue(),
@@ -47,8 +40,8 @@ public final class KubeJSDynamicRender extends DynamicRender<IMachineFeature, Ku
             ResourceLocation.CODEC.fieldOf("id")
                     .forGetter(r -> r.renderId),
 
-            JSON_CODEC.optionalFieldOf("data")
-                    .forGetter(r -> Optional.ofNullable(r.data)))
+            JSON_CODEC.optionalFieldOf("rawBinding")
+                    .forGetter(r -> Optional.ofNullable(r.rawBinding)))
             .apply(inst, (id, dataOpt) -> new KubeJSDynamicRender(id, dataOpt.orElse(null))));
     public static final DynamicRenderType<IMachineFeature, KubeJSDynamicRender> TYPE = new DynamicRenderType<>(CODEC);
 
@@ -58,36 +51,24 @@ public final class KubeJSDynamicRender extends DynamicRender<IMachineFeature, Ku
 
     public KubeJSDynamicRender(ResourceLocation renderId) {
         this.renderId = renderId;
-        this.data = new JsonObject();
+        this.rawBinding = new JsonObject();
     }
 
-    public KubeJSDynamicRender(ResourceLocation renderId, @Nullable JsonElement data) {
+    public KubeJSDynamicRender(ResourceLocation renderId, @Nullable JsonElement rawBinding) {
         this.renderId = renderId;
-        this.data = data;
+        this.rawBinding = rawBinding;
     }
 
     public static KubeJSDynamicRender of(ResourceLocation renderId) {
         return new KubeJSDynamicRender(renderId);
     }
 
-    public static KubeJSDynamicRender of(ResourceLocation renderId, @Nullable JsonElement data) {
-        return new KubeJSDynamicRender(renderId, data);
+    public static KubeJSDynamicRender of(ResourceLocation renderId, @Nullable JsonElement rawBinding) {
+        return new KubeJSDynamicRender(renderId, rawBinding);
     }
 
-    // キャッシュ用
-    private transient @Nullable Object dataView;
-
-    @Nullable
-    public Object getDataView() {
-        if (data == null) return new Object();
-        if (dataView == null) {
-            dataView = JsonIO.toObject(data);
-        }
-        return dataView;
-    }
-
-    private RenderHooks<IMachineFeature> hooks() {
-        RenderHooks<IMachineFeature> h = GTRenderJSRegistry.getHooks(renderId);
+    private RenderHooks<IMachineFeature, Object> hooks() {
+        RenderHooks<IMachineFeature, Object> h = GTRenderJSRegistry.getHooks(renderId);
         return (h != null) ? h : RenderHooks.noop();
     }
 
@@ -104,15 +85,14 @@ public final class KubeJSDynamicRender extends DynamicRender<IMachineFeature, Ku
     public void render(IMachineFeature machine, float partialTick,
                        PoseStack poseStack, MultiBufferSource buffer,
                        int packedLight, int packedOverlay) {
-        hooks().render(machine, partialTick, poseStack, buffer, packedLight, packedOverlay, defaults, data,
-                getDataView());
+        hooks().render(machine, partialTick, poseStack, buffer, packedLight, packedOverlay, defaults, rawBinding);
     }
 
     @Override
     public void renderByItem(ItemStack stack, ItemDisplayContext displayContext, PoseStack poseStack,
                              MultiBufferSource buffer, int packedLight, int packedOverlay) {
-        hooks().renderByItem(stack, displayContext, poseStack, buffer, packedLight, packedOverlay, defaults, data,
-                getDataView());
+        hooks().renderByItem(stack, displayContext, poseStack, buffer, packedLight, packedOverlay, defaults,
+                rawBinding);
     }
 
     @Override

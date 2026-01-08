@@ -11,32 +11,40 @@ import net.minecraft.world.phys.Vec3;
 import com.google.gson.JsonElement;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.p_nsk.kubejs_gtrender.KubeJSDynamicRender;
+import dev.latvian.mods.kubejs.util.JsonIO;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public final class RenderHooksImpl<T extends IMachineFeature> implements RenderHooks<T> {
+public final class RenderHooksImpl<T extends IMachineFeature, Binding> implements RenderHooks<T, Binding> {
 
-    private final Consumer<RenderContext<T>> renderHook; // 必須
+    private final Consumer<RenderContext<T, Binding>> renderHook; // 必須
 
     private final @Nullable BiPredicate<T, Vec3> shouldRenderHook;
     private final @Nullable Predicate<T> offscreenHook;
     private final @Nullable Integer viewDistance;
     private final @Nullable Function<T, AABB> boundingBoxHook;
-    private final @Nullable Consumer<ItemRenderContext<T>> renderByItemHook;
+    private final @Nullable Consumer<ItemRenderContext<T, Binding>> renderByItemHook;
     private final @Nullable Boolean isBlockEntityRenderer;
+    private final @NotNull Function<Object, Binding> prepareBinding;
+    private final Map<JsonElement, Binding> bindingCache = new HashMap<>();
 
     public RenderHooksImpl(
-                           Consumer<RenderContext<T>> renderHook,
+                           Consumer<RenderContext<T, Binding>> renderHook,
                            @Nullable BiPredicate<T, Vec3> shouldRenderHook,
                            @Nullable Predicate<T> offscreenHook,
                            @Nullable Integer viewDistance,
                            @Nullable Function<T, AABB> boundingBoxHook,
-                           @Nullable Consumer<ItemRenderContext<T>> renderByItemHook,
-                           @Nullable Boolean isBlockEntityRenderer) {
+                           @Nullable Consumer<ItemRenderContext<T, Binding>> renderByItemHook,
+                           @Nullable Boolean isBlockEntityRenderer,
+                           @Nullable Function<Object, Binding> prepareBinding) {
         this.renderHook = renderHook;
         this.shouldRenderHook = shouldRenderHook;
         this.offscreenHook = offscreenHook;
@@ -44,6 +52,16 @@ public final class RenderHooksImpl<T extends IMachineFeature> implements RenderH
         this.boundingBoxHook = boundingBoxHook;
         this.renderByItemHook = renderByItemHook;
         this.isBlockEntityRenderer = isBlockEntityRenderer;
+        // noinspection unchecked
+        this.prepareBinding = Objects.requireNonNullElse(prepareBinding,
+                (Function<Object, Binding>) Function.identity());
+    }
+
+    public Binding getBinding(JsonElement raw) {
+        Object rawView = JsonIO.toObject(raw);
+        return bindingCache.computeIfAbsent(
+                raw,
+                rd -> prepareBinding.apply(rawView));
     }
 
     @Override
@@ -51,9 +69,9 @@ public final class RenderHooksImpl<T extends IMachineFeature> implements RenderH
                        PoseStack poseStack, MultiBufferSource buffer,
                        int packedLight, int packedOverlay,
                        KubeJSDynamicRender.Defaults<T> defaults,
-                       @Nullable JsonElement data, Object dataView) {
+                       @Nullable JsonElement rawBinding) {
         renderHook.accept(new RenderContext<>(
-                data, dataView, machine, partialTick,
+                getBinding(rawBinding), machine, partialTick,
                 poseStack, buffer, packedLight, packedOverlay));
     }
 
@@ -87,10 +105,11 @@ public final class RenderHooksImpl<T extends IMachineFeature> implements RenderH
     @Override
     public void renderByItem(ItemStack stack, ItemDisplayContext displayContext, PoseStack poseStack,
                              MultiBufferSource buffer, int packedLight, int packedOverlay,
-                             KubeJSDynamicRender.Defaults<T> defaults, @Nullable JsonElement data, Object dataView) {
+                             KubeJSDynamicRender.Defaults<T> defaults, @Nullable JsonElement rawBinding) {
         if (renderByItemHook != null) {
-            renderByItemHook.accept(new ItemRenderContext<>(data, dataView, stack, displayContext, poseStack, buffer,
-                    packedLight, packedOverlay));
+            renderByItemHook
+                    .accept(new ItemRenderContext<>(getBinding(rawBinding), stack, displayContext, poseStack, buffer,
+                            packedLight, packedOverlay));
             return;
         }
         defaults.renderByItem(stack, displayContext, poseStack, buffer, packedLight, packedOverlay);

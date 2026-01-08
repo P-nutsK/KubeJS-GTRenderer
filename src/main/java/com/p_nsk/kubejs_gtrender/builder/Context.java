@@ -2,15 +2,20 @@ package com.p_nsk.kubejs_gtrender.builder;
 
 import com.gregtechceu.gtceu.api.machine.feature.IMachineFeature;
 
-import com.google.gson.JsonElement;
+import dev.latvian.mods.kubejs.typings.Info;
 
-public class Context<T extends IMachineFeature> {
+public class Context<T extends IMachineFeature, Binding> {
 
-    public final Object data;
-    public final JsonElement jsonData;
+    @Info("""
+            The bindings object associated with this context.
+            Introducing the argument system for KubeJSDynamicRender.of("ns:id", here)!
+            It can accept anything that is JSON Serializable.
+            By default, values are inputted as is, but you can preprocess them with builder.prepareBinding().
+            Note: This value is cached. Please use pure values only.
+            """)
+    public final Binding binding;
 
-    public Context(JsonElement data, Object dataView) {
-        this.data = dataView;
-        this.jsonData = data;
+    public Context(Binding binding) {
+        this.binding = binding;
     }
 }

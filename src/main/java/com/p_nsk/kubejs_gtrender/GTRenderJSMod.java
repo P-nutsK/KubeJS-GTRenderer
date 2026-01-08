@@ -43,16 +43,9 @@ public class GTRenderJSMod {
                 KubeJSDynamicRender.TYPE);
     }
 
-    private void commonSetup(final FMLCommonSetupEvent event) {
-        // event.enqueueWork(() -> {
-        // LOGGER.info("Hello from common setup! This is *after* registries are done, so we can do this:");
-        // LOGGER.info("Look, I found a {}!", Items.DIAMOND);
-        // });
-    }
+    private void commonSetup(final FMLCommonSetupEvent event) {}
 
-    private void clientSetup(final FMLClientSetupEvent event) {
-        // LOGGER.info("Hey, we're on Minecraft version {}!", Minecraft.getInstance().getLaunchedVersion());
-    }
+    private void clientSetup(final FMLClientSetupEvent event) {}
 
     /**
      * Create a ResourceLocation in the format "modid:path"
