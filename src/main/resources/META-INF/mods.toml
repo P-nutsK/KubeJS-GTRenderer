@@ -21,6 +21,7 @@ license = "${mod_license}"
     description = '''
 A helper to enable the creation of custom renderers for GregTech machines in KubeJS.
 '''
+    logoFile = "assets/${mod_id}/logo.png"
 
     [[dependencies.${mod_id}]]
         modId = "forge"
